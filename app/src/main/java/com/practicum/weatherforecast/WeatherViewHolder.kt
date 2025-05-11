@@ -2,13 +2,11 @@ package com.practicum.weatherforecast
 
 import android.view.View
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
 class WeatherViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-    private val layout: LinearLayout = itemView.findViewById(R.id.layout)
     private val week_day: TextView = itemView.findViewById(R.id.week_day)
     private val temperature_icon: ImageView = itemView.findViewById(R.id.temperature_icon)
     private val temperature_value: TextView = itemView.findViewById(R.id.temperature_value)
@@ -25,8 +23,7 @@ class WeatherViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             }
         }
         temperature_value.text = weather.temperatureString()
-
-        temperature_icon.setBackgroundColor(weather.temperatureColor())
+        temperature_icon.setBackgroundColor(itemView.context.getColor(weather.temperatureColor()))
     }
 
 }
