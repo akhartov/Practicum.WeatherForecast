@@ -19,5 +19,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "WeatherForecast"
+rootProject.name = "ImdbSearch"
 include(":app")

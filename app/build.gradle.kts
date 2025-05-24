@@ -8,7 +8,7 @@ android {
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.practicum.weatherforecast"
+        applicationId = "com.practicum.imdb"
         minSdk = 29
         targetSdk = 34
         versionCode = 1
@@ -40,6 +40,15 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
+
+    implementation(libs.gson.gson)
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
+
+
+    implementation(libs.glide)
+    annotationProcessor(libs.glidecompiler)
+
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
     testImplementation(libs.junit)
