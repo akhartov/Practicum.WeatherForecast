@@ -2,4 +2,7 @@
     <string name="app_name">WeatherForecast</string>
     <string name="app_header">Прогноз погоды</string>
     <string name="default_day">Пн</string>
+    <string name="search">Поиск</string>
+    <string name="nothing_found">Ничего не нашлось...</string>
+    <string name="something_went_wrong">Что-то пошло не так...</string>
 </resources>
