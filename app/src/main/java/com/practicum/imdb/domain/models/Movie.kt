@@ -1,4 +1,4 @@
-package com.practicum.weatherforecast
+package com.practicum.imdb.domain.models
 
 data class Movie(
     val id: String,

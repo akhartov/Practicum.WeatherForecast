@@ -1,4 +1,4 @@
-package com.practicum.weatherforecast
+package com.practicum.imdb
 
 import org.junit.Test
 

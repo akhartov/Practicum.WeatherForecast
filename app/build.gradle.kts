@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "com.practicum.weatherforecast"
+    namespace = "com.practicum.imdb"
     compileSdk = 35
 
     defaultConfig {
