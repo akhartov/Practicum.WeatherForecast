@@ -19,6 +19,7 @@ import com.practicum.imdb.ui.poster.PosterActivity
 import com.practicum.imdb.R
 import com.practicum.imdb.domain.models.Movie
 import com.practicum.imdb.presentation.movies.MoviesView
+import com.practicum.imdb.ui.movies.models.MoviesState
 
 class MoviesActivity : Activity(), MoviesView {
 
@@ -90,29 +91,45 @@ class MoviesActivity : Activity(), MoviesView {
         return current
     }
 
-    override fun showPlaceholderMessage(isVisible: Boolean) {
-        placeholderMessage.visibility = if (isVisible) View.VISIBLE else View.GONE
+
+    fun showLoading() {
+        moviesList.visibility = View.GONE
+        placeholderMessage.visibility = View.GONE
+        progressBar.visibility = View.VISIBLE
     }
 
-    override fun showMoviesList(isVisible: Boolean) {
-        moviesList.visibility = if (isVisible) View.VISIBLE else View.GONE
+    fun showError(errorMessage: String) {
+        moviesList.visibility = View.GONE
+        placeholderMessage.visibility = View.VISIBLE
+        progressBar.visibility = View.GONE
+
+        placeholderMessage.text = errorMessage
     }
 
-    override fun showProgressBar(isVisible: Boolean) {
-        progressBar.visibility = if (isVisible) View.VISIBLE else View.GONE
+    fun showEmpty(emptyMessage: String) {
+        showError(emptyMessage)
     }
 
-    override fun changePlaceholderText(newPlaceholderText: String) {
-        placeholderMessage.text = newPlaceholderText
-    }
+    fun showContent(movies: List<Movie>) {
+        moviesList.visibility = View.VISIBLE
+        placeholderMessage.visibility = View.GONE
+        progressBar.visibility = View.GONE
 
-    override fun updateMoviesList(newMoviesList: List<Movie>) {
         adapter.movies.clear()
-        adapter.movies.addAll(newMoviesList)
+        adapter.movies.addAll(movies)
         adapter.notifyDataSetChanged()
     }
 
-    override fun showMessage(message: String) {
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+    override fun showToast(additionalMessage: String) {
+        Toast.makeText(this, additionalMessage, Toast.LENGTH_LONG).show()
+    }
+
+    override fun render(state: MoviesState) {
+        when (state) {
+            is MoviesState.Loading -> showLoading()
+            is MoviesState.Content -> showContent(state.movies)
+            is MoviesState.Error -> showError(state.errorMessage)
+            is MoviesState.Empty -> showEmpty(state.message)
+        }
     }
 }
