@@ -11,11 +11,13 @@ import android.view.View
 import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.practicum.imdb.Creator
 import com.practicum.imdb.ui.poster.PosterActivity
 import com.practicum.imdb.R
+import com.practicum.imdb.domain.models.Movie
 import com.practicum.imdb.presentation.movies.MoviesView
 
 class MoviesActivity : Activity(), MoviesView {
@@ -38,7 +40,7 @@ class MoviesActivity : Activity(), MoviesView {
         }
     }
 
-    private val moviesSearchPresenter = Creator.provideMoviesSearchPresenter(this, this, adapter)
+    private val moviesSearchPresenter = Creator.provideMoviesSearchPresenter(this, this)
 
     private var isClickAllowed = true
 
@@ -102,5 +104,15 @@ class MoviesActivity : Activity(), MoviesView {
 
     override fun changePlaceholderText(newPlaceholderText: String) {
         placeholderMessage.text = newPlaceholderText
+    }
+
+    override fun updateMoviesList(newMoviesList: List<Movie>) {
+        adapter.movies.clear()
+        adapter.movies.addAll(newMoviesList)
+        adapter.notifyDataSetChanged()
+    }
+
+    override fun showMessage(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
     }
 }

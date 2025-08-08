@@ -1,6 +1,5 @@
 package com.practicum.imdb
 
-import android.app.Activity
 import android.content.Context
 import com.practicum.imdb.data.MoviesRepositoryImpl
 import com.practicum.imdb.data.network.RetrofitNetworkClient
@@ -8,9 +7,9 @@ import com.practicum.imdb.domain.api.MoviesInteractor
 import com.practicum.imdb.domain.api.MoviesRepository
 import com.practicum.imdb.domain.impl.MoviesInteractorImpl
 import com.practicum.imdb.presentation.movies.MoviesSearchPresenter
-import com.practicum.imdb.presentation.PosterController
+import com.practicum.imdb.presentation.poster.PosterPresenter
 import com.practicum.imdb.presentation.movies.MoviesView
-import com.practicum.imdb.ui.movies.MoviesAdapter
+import com.practicum.imdb.presentation.poster.PosterView
 
 object Creator {
     private fun getMoviesRepository(context: Context): MoviesRepository {
@@ -21,11 +20,14 @@ object Creator {
         return MoviesInteractorImpl(getMoviesRepository(context))
     }
 
-    fun provideMoviesSearchPresenter(moviesView: MoviesView, context: Context, adapter: MoviesAdapter): MoviesSearchPresenter {
-        return MoviesSearchPresenter(moviesView, context, adapter)
+    fun provideMoviesSearchPresenter(moviesView: MoviesView, context: Context): MoviesSearchPresenter {
+        return MoviesSearchPresenter(moviesView, context)
     }
 
-    fun providePosterController(activity: Activity): PosterController {
-        return PosterController(activity)
+    fun providePosterPresenter(
+        posterView: PosterView,
+        imageUrl: String
+    ): PosterPresenter {
+        return PosterPresenter(posterView, imageUrl)
     }
 }

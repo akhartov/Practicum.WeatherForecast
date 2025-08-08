@@ -6,17 +6,14 @@ import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.os.SystemClock
-import android.widget.Toast
 import com.practicum.imdb.Creator
 import com.practicum.imdb.R
 import com.practicum.imdb.domain.api.MoviesInteractor
 import com.practicum.imdb.domain.models.Movie
-import com.practicum.imdb.ui.movies.MoviesAdapter
 
 class MoviesSearchPresenter(
     private val view: MoviesView,
-    private val context: Context,
-    private val adapter: MoviesAdapter) {
+    private val context: Context) {
     private val moviesInteractor = Creator.provideMoviesInteractor(context)
     private var lastSearchText: String? = null
 
@@ -35,7 +32,7 @@ class MoviesSearchPresenter(
     }
 
     fun onCreate() {
-        adapter.movies = movies
+        //adapter.movies = movies
     }
 
     fun onDestroy() {
@@ -65,54 +62,48 @@ class MoviesSearchPresenter(
 
     private fun searchRequest(newSearchText: String) {
         if (newSearchText.isNotEmpty()) {
-            //placeholderMessage.visibility = View.GONE
-            //moviesList.visibility = View.GONE
-            //progressBar.visibility = View.VISIBLE
+            view.showPlaceholderMessage(false)
+            view.showMoviesList(false)
+            view.showProgressBar(true)
 
-            moviesInteractor.searchMovies(
-                newSearchText,
-                object : MoviesInteractor.MoviesConsumer {
-                    override fun consume(foundMovies: List<Movie>?, errorMessage: String?) {
-                        handler.post {
-                            //progressBar.visibility = View.GONE
-                            if (foundMovies != null) {
-                                movies.clear()
-                                movies.addAll(foundMovies)
-                                adapter.notifyDataSetChanged()
-                                //moviesList.visibility = View.VISIBLE
-                            }
-                            if (errorMessage != null) {
-                                showMessage(
-                                    context.getString(R.string.something_went_wrong),
-                                    errorMessage
-                                )
-                            } else if (movies.isEmpty()) {
-                                showMessage(context.getString(R.string.nothing_found), "")
-                            } else {
-                                hideMessage()
-                            }
+            moviesInteractor.searchMovies(newSearchText, object : MoviesInteractor.MoviesConsumer {
+                override fun consume(foundMovies: List<Movie>?, errorMessage: String?) {
+                    handler.post {
+                        view.showProgressBar(false)
+                        if (foundMovies != null) {
+
+                            // Обновляем список на экране
+                            movies.clear()
+                            movies.addAll(foundMovies)
+                            view.updateMoviesList(movies)
+                            view.showMoviesList(true)
+                        }
+                        if (errorMessage != null) {
+                            showMessage(context.getString(R.string.something_went_wrong), errorMessage)
+                        } else if (movies.isEmpty()) {
+                            showMessage(context.getString(R.string.nothing_found), "")
+                        } else {
+                            hideMessage()
                         }
                     }
                 }
-            )
+            })
         }
     }
 
     private fun showMessage(text: String, additionalMessage: String) {
         if (text.isNotEmpty()) {
-            // Заменили работу с элементами UI на
-            // вызовы методов интерфейса
             view.showPlaceholderMessage(true)
+
+            // Обновляем список на экране
             movies.clear()
-            adapter.notifyDataSetChanged()
+            view.updateMoviesList(movies)
+
             view.changePlaceholderText(text)
             if (additionalMessage.isNotEmpty()) {
-                Toast.makeText(context, additionalMessage, Toast.LENGTH_LONG)
-                    .show()
+                view.showMessage(additionalMessage)
             }
         } else {
-            // Заменили работу с элементами UI на
-            // вызовы методов интерфейса
             view.showPlaceholderMessage(false)
         }
     }
