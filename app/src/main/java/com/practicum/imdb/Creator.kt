@@ -8,7 +8,6 @@ import com.practicum.imdb.domain.api.MoviesRepository
 import com.practicum.imdb.domain.impl.MoviesInteractorImpl
 import com.practicum.imdb.presentation.movies.MoviesSearchPresenter
 import com.practicum.imdb.presentation.poster.PosterPresenter
-import com.practicum.imdb.presentation.movies.MoviesView
 import com.practicum.imdb.presentation.poster.PosterView
 
 object Creator {
@@ -20,8 +19,8 @@ object Creator {
         return MoviesInteractorImpl(getMoviesRepository(context))
     }
 
-    fun provideMoviesSearchPresenter(moviesView: MoviesView, context: Context): MoviesSearchPresenter {
-        return MoviesSearchPresenter(moviesView, context)
+    fun provideMoviesSearchPresenter(context: Context): MoviesSearchPresenter {
+        return MoviesSearchPresenter(context)
     }
 
     fun providePosterPresenter(

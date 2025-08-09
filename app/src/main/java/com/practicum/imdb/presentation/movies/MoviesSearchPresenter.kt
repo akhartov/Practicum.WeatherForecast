@@ -11,10 +11,9 @@ import com.practicum.imdb.R
 import com.practicum.imdb.domain.api.MoviesInteractor
 import com.practicum.imdb.domain.models.Movie
 import com.practicum.imdb.ui.movies.models.MoviesState
+import moxy.MvpPresenter
 
-class MoviesSearchPresenter(
-    private val view: MoviesView,
-    private val context: Context) {
+class MoviesSearchPresenter(private val context: Context): MvpPresenter<MoviesView>() {
     private val moviesInteractor = Creator.provideMoviesInteractor(context)
     private var lastSearchText: String? = null
 
@@ -32,11 +31,15 @@ class MoviesSearchPresenter(
         searchRequest(newSearchText)
     }
 
+    private fun renderState(state: MoviesState) {
+        viewState.render(state)
+    }
+
     fun onCreate() {
         //adapter.movies = movies
     }
 
-    fun onDestroy() {
+    override fun onDestroy() {
         handler.removeCallbacks(searchRunnable)
     }
 
@@ -63,7 +66,7 @@ class MoviesSearchPresenter(
 
     private fun searchRequest(newSearchText: String) {
         if (newSearchText.isNotEmpty()) {
-            view.render(
+            renderState(
                 MoviesState.Loading
             )
 
@@ -77,16 +80,16 @@ class MoviesSearchPresenter(
 
                         when {
                             errorMessage != null -> {
-                                view.render(
+                                renderState(
                                     MoviesState.Error(
                                         errorMessage = context.getString(R.string.something_went_wrong),
                                     )
                                 )
-                                view.showToast(errorMessage)
+                                viewState.showToast(errorMessage)
                             }
 
                             movies.isEmpty() -> {
-                                view.render(
+                                renderState(
                                     MoviesState.Empty(
                                         message = context.getString(R.string.nothing_found),
                                     )
@@ -94,7 +97,7 @@ class MoviesSearchPresenter(
                             }
 
                             else -> {
-                                view.render(
+                                renderState(
                                     MoviesState.Content(
                                         movies = movies,
                                     )

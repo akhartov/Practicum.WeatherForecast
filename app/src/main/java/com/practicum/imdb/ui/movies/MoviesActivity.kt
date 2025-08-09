@@ -1,6 +1,5 @@
 package com.practicum.imdb.ui.movies
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
@@ -18,10 +17,14 @@ import com.practicum.imdb.Creator
 import com.practicum.imdb.ui.poster.PosterActivity
 import com.practicum.imdb.R
 import com.practicum.imdb.domain.models.Movie
+import com.practicum.imdb.presentation.movies.MoviesSearchPresenter
 import com.practicum.imdb.presentation.movies.MoviesView
 import com.practicum.imdb.ui.movies.models.MoviesState
+import moxy.MvpActivity
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 
-class MoviesActivity : Activity(), MoviesView {
+class MoviesActivity : MvpActivity(), MoviesView {
 
     companion object {
         private const val CLICK_DEBOUNCE_DELAY = 1000L
@@ -41,7 +44,15 @@ class MoviesActivity : Activity(), MoviesView {
         }
     }
 
-    private val moviesSearchPresenter = Creator.provideMoviesSearchPresenter(this, this)
+    @InjectPresenter
+    lateinit var moviesSearchPresenter: MoviesSearchPresenter// = Creator.provideMoviesSearchPresenter(this)
+
+    @ProvidePresenter
+    fun providePresenter(): MoviesSearchPresenter {
+        return Creator.provideMoviesSearchPresenter(
+            context = this.applicationContext,
+        )
+    }
 
     private var isClickAllowed = true
 
@@ -75,10 +86,12 @@ class MoviesActivity : Activity(), MoviesView {
         })
 
         moviesSearchPresenter.onCreate()
+        //moviesSearchPresenter.attachView(this)
     }
 
     override fun onDestroy() {
         super.onDestroy()
+        //moviesSearchPresenter.detachView()
         moviesSearchPresenter.onDestroy()
     }
 

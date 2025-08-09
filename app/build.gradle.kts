@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.kapt)
 }
 
 android {
@@ -44,7 +45,9 @@ dependencies {
     implementation(libs.gson.gson)
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
-
+    implementation(libs.moxy)
+    implementation(libs.moxy.android)
+    kapt(libs.moxy.compiler)
 
     implementation(libs.glide)
     annotationProcessor(libs.glidecompiler)
